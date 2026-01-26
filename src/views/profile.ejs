@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>user profile</title>
+</head>
+
+<body>
+
+    <div class="profile">
+        <h1>user profile</h1>
+        <li><a href="/">homa</a></li>
+        <P>name : <%= user.name %>
+        </P>
+        <P>family : <%= user.family %>
+        </P>
+        <P>age : <%= user.age %>
+        </P>
+        <P>email : <%= user.email %>
+        </P>
+        <a href="/logout">
+            <h3>log out</h3>
+        </a>
+        <a href="/task/create">
+            <h3>createTask</h3>
+        </a>
+    </div>
+
+    <div class="task">
+
+            <% if (tasks && tasks.length > 0) { %>
+                <% tasks.forEach(function(task) { %>
+                    <h1>title : <%= task.title %>
+                    </h1>
+                    <p>description : <%= task.description %>
+                    </p>
+                    <p>status : <%= task.status %>
+                    </p>
+                    <% if(task.urgent) %>
+                        <p>urgent : <%= task.urgent %>
+                        </p>
+
+                        <% }); %>
+                            <% } else { %>
+                                <p>you dont have any task</p>
+                                <% } %>
+
+    </div>
+
+
+</body>
+
+</html>

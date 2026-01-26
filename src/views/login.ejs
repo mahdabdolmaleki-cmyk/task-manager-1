@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .link a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+
+        .status {
+            position: relative;
+            width: auto;
+            height: 60px;
+            color: green;
+            font-size: 20px;
+        }
+
+        nav {
+            display: flex;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            justify-content: space-between;
+            margin-bottom: 60px;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        nav li {
+            list-style-type: none;
+            margin-left: 20px;
+        }
+
+        nav h1 {
+            font-size: 3em;
+        }
+
+        nav p,
+        nav a {
+            color: #777;
+            font-weight: 300;
+        }
+
+        a {
+            color: #222;
+            transition: all .5s ease-in-out;
+        }
+
+        nav a:hover {
+            color: red;
+            padding-bottom: 6px;
+            font-size: 20px;
+            transition: all .5s ease-in-out;
+
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">homa</a></li>
+            <li><a href="/login">login</a></li>
+            <li><a href="/register">register</a></li>
+        </ul>
+
+    </nav>
+    <div class="login">
+        <h2>Login</h2>
+        <% if (typeof status !=='undefined' ) { %>
+            <div class="status">
+                <%= status %>
+            </div>
+            <% } %>
+                <form action="/user/login" method="post">
+                    <label for="email">email:</label>
+                    <input type="text" name="email" required>
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" required>
+                    <input type="submit" value="Login">
+                </form>
+                <div class="link">
+                    <a href="/register">Don't have an account? Sign up</a>
+                </div>
+    </div>
+</body>
+
+</html>

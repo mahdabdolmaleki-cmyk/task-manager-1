@@ -13,13 +13,22 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "express": "^5.2.1",
-    "mongoose": "^9.1.2",
+    "bcrypt": "^6.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.3",
     "dotenv": "^17.2.3",
-    "nodemon": "^3.1.11"
+    "@types/bcrypt": "^6.0.0",
+    "ejs": "^3.1.10",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "cookie-parser": "^1.4.7",
+    "mongoose": "^9.1.2",
+    "nodemon": "^3.1.11",
+    "swagger": "^0.7.5"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.0.3",
     "typescript": "^5.9.3"
   }
