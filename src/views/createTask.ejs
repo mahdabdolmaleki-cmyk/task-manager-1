@@ -37,7 +37,7 @@
                             <% if (users && users.length> 0) { %>
                                 <% users.forEach(function(user) { %>
                                     <option value="<%= user._id %>">
-                                        <%= user.name %> (<%= user.email %>)
+                                        <%= user.name %> (<%= user.email %>) (<%= user.level %>)
                                     </option>
                                     <% }); %>
                                         <% } else { %>
