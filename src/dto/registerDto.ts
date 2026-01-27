@@ -11,8 +11,3 @@ export class registerValidator {
     password : string;
     age?: number;
 }
-export class loginValidator{
-    @IsEmail()
-    email : string;
-    password : string;
-}

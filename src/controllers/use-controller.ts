@@ -16,6 +16,7 @@ export const login = async (req:Request,res:Response)=>{
             
             const tasks = await TaskModel.find({forUser:find._id})
             const token = encodeToken({id:find._id})
+            console.log(tasks)
             res.cookie('token', token, { httpOnly: true, maxAge: 3600000 })
             res.render('profile',{user:find,tasks})
             

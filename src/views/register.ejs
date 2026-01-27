@@ -126,6 +126,15 @@
             transition: all .5s ease-in-out;
 
         }
+
+        select {
+            width: 80%;
+            align-items: center;
+            text-align: center;
+            background-color: rgb(0, 255, 123);
+            border-radius: 10px;
+            border: 1px solid rgb(3, 114, 57);
+        }
     </style>
 </head>
 
@@ -157,15 +166,21 @@
                             <label for="family">Family:</label>
                             <input type="text" name="family" required>
 
-                            <label for="age">age:</label>
-                            <input type="text" name="age" required>
-
                             <label for="email">Email:</label>
                             <input type="email" name="email" required>
 
                             <label for="password">Password:</label>
                             <input type="password" name="password" required>
-                            
+
+                            <label for="level ">level :
+                                <select name="level">
+
+                                    <option value="senior">senior</option>
+                                    <option value="midlevel">midlevel</option>
+                                    <option value="junior">junior</option>
+
+                                </select> </label><br>
+
                             <input type="submit" value="Sign Up">
                         </form>
                         <div class="link">
