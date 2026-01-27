@@ -5,69 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>home page</title>
-
-    <style>
-        nav {
-            display: flex;
-            position: absolute;
-            top: 50px;
-            left: 50px;
-            justify-content: space-between;
-            margin-bottom: 60px;
-            padding-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        nav ul {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        nav li {
-            list-style-type: none;
-            margin-left: 20px;
-        }
-
-        nav h1 {
-            font-size: 3em;
-        }
-
-        nav p,
-        nav a {
-            color: #777;
-            font-weight: 300;
-        }
-
-        a {
-            color: #222;
-            transition: all .5s ease-in-out;
-        }
-
-        nav a:hover {
-            color: red;
-            padding-bottom: 6px;
-            font-size: 20px;
-            transition: all .5s ease-in-out;
-
-        }
-        h1{
-            position: relative;
-            top: 80px;
-        }
-    </style>
-
+    <link rel="stylesheet" href="/styles.css">
 </head>
 
 <body>
-    <nav>
-        <ul>
-            <li><a href="/">homa</a></li>
-            <li><a href="/login">login</a></li>
-            <li><a href="/register">register</a></li>
-        </ul>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">Task Manager</a>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/login" class="nav-link">Login</a></li>
+                <li><a href="/register" class="nav-link">Register</a></li>
+            </ul>
+        </div>
     </nav>
-    <h1>homa page</h1>
+
+    <!-- Welcome Section -->
+    <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <h1 class="empty-state-title">Welcome to Task Manager</h1>
+        <p class="empty-state-text">Organize your tasks and boost your productivity</p>
+        <a href="/register" class="create-task-btn">Get Started</a>
+    </div>
 </body>
 
 </html>
