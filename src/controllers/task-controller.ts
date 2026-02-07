@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express'
 import UserModel from '../model/user-model'
 import { decodeToken, encodeToken } from '../utils/auth'
 import TaskModel from '../model/task-model'
-const render = require('../modules/render')
 
 
 export const Get_CreateTask = async (req: Request, res: Response, next: NextFunction) => {

@@ -6,6 +6,8 @@ import path from 'path'
 import { jwtAuthMiddleware } from './middlewares/jwtAuth'
 import taskRouter from './routes/task-routes'
 
+
+
 const cookieParser =require ('cookie-parser')
 require('ejs')
 require('dotenv/config')
