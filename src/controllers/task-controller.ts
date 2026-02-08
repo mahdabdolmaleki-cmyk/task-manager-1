@@ -12,9 +12,15 @@ export const Get_CreateTask = async (req: Request, res: Response, next: NextFunc
         console.log(currentUser.id)
         const user = await UserModel.findById(currentUser.id)
         if (!user) return res.render('login')
+        if(user.level === 'junior') return res.render('createTask',{status:'you dont have access to create task'})
         let allUser= await UserModel.find()
-        const users = allUser.filter(users => users.name !== user.name);
-        console.log(users)
+        let users = allUser.filter(users => users.name !== user.name);
+        if ( user.level === 'midlevel') {
+            users = users.filter(users => users.level === 'junior');
+        }
+        if ( user.level === 'senior') {
+            users = users.filter(users => users.level === 'midlevel' || users.level === 'junior');
+        }       
         res.render('createTask',{users})
     } catch (err: any) {
         res.send(err)

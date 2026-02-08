@@ -14,7 +14,8 @@
         <div class="nav-container">
             <a href="/" class="nav-logo">Task Manager</a>
             <ul class="nav-menu">
-                <li><a href="/" class="nav-link">Home</a></li>
+                
+                <li><a href="/login" class="nav-link">profile</a></li>
                 <li><a href="/task/create" class="nav-link active">Create Task</a></li>
                 <li><a href="/logout" class="nav-link">Logout</a></li>
             </ul>
@@ -28,7 +29,7 @@
             <div class="status">
                 <%= status %>
             </div>
-            <% } %>
+            <% } else { %>
 
                 <form action="/task/create" method="post">
                     <div class="form-group">
@@ -65,7 +66,7 @@
 
                     <input type="submit" value="Create Task">
                 </form>
-    </div>
+    </div><% } %>
 
 </body>
 

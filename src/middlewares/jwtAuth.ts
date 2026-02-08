@@ -20,7 +20,6 @@ export const jwtAuthMiddleware = async (req: Request, res: Response, next: NextF
         next()
     }
     const tasks = await TaskModel.find({forUser:id})
-    console.log(user)
     res.render('profile',{user,tasks})
     } catch (err:any) {
         res.status(500).send({message:"server error"})        

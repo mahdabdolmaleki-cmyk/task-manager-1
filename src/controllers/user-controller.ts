@@ -8,9 +8,10 @@ import TaskModel from '../model/task-model'
 
 export const login = async (req: Request, res: Response) => {
     try {
-        const data: UserDto = req.body
+        const data = req.body
         const find = await UserModel.findOne({ email: data.email })
         if (!find) return res.render('login', { status: "wrong email or password" })
+        if (!find.password) return res.render('login', { status: "Please login with GitHub or set a password" })
         const match = await bcrypt.compare(data.password, find.password)
         if (!match) return res.render('login', { status: "wrong email or password" })
         const tasks = await TaskModel.find({ forUser: find._id })
@@ -43,7 +44,6 @@ export const register = async (req: Request, res: Response) => {
         const data: UserDto = req.body
         const find = await UserModel.findOne({ email: data.email })
         if (!find) {
-            // const user= await UserModel.create(req.body)
             const hashedPassword = await bcrypt.hash(data.password, 10)
             const user = await UserModel.create({ ...data, password: hashedPassword })
             res.render('login', { status: "user created" })
@@ -59,14 +59,14 @@ export const updateUser = async (req: Request, res: Response) => {
     try {
         const id: string = req.params.id
         let { name, family, email, level } = req.body
-        let data : any = {}
+        let data: any = {}
         if (name !== '') data.name = name
         if (family !== '') data.family = family
         if (email !== '') data.email = email
         if (level !== '') data.level = level
         console.log(data)
-        const user = await UserModel.findByIdAndUpdate(id, data,{new:true})
-        res.send(user)
+        const user = await UserModel.findByIdAndUpdate(id, data, { new: true })
+        res.render('editProfile', { user })
     } catch (err: any) {
         res.send(err)
     }
@@ -76,7 +76,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     try {
         const id: string = req.params.id
         const user = await UserModel.findByIdAndDelete(id)
-        res.send(user)
+        res.render('index', { status: "user deleted" })
     } catch (err: any) {
         res.send(err)
     }
