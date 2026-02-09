@@ -7,6 +7,7 @@ import { jwtAuthMiddleware } from './middlewares/jwtAuth'
 import taskRouter from './routes/task-routes'
 import session from 'express-session'
 import passport from './config/passport'
+import { globalErrorHandler } from './middlewares/error-handler'
 
 
 
@@ -46,6 +47,8 @@ app.get('/logout', (req, res) => {
     res.clearCookie('token')
     res.redirect('/')
 })
+
+app.use(globalErrorHandler)
 
 const port: any = process.env.PORT || 5500
 const aa: any = process.env.DB_URL

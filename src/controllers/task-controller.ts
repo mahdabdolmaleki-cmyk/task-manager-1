@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from 'express'
 import UserModel from '../model/user-model'
 import { decodeToken, encodeToken } from '../utils/auth'
 import TaskModel from '../model/task-model'
+import { catchAsync } from '../errors/catch-async'
 
 
-export const Get_CreateTask = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+export const Get_CreateTask = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         let currentUser = req.cookies.token
         if (!req.cookies.token) return res.render('login')
         currentUser = decodeToken(currentUser)
@@ -22,13 +22,9 @@ export const Get_CreateTask = async (req: Request, res: Response, next: NextFunc
             users = users.filter(users => users.level === 'midlevel' || users.level === 'junior');
         }       
         res.render('createTask',{users})
-    } catch (err: any) {
-        res.send(err)
-    }
-}
+})
 
-export const Post_CreateTask = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+export const Post_CreateTask = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         let currentUser = req.cookies.token
         currentUser = decodeToken(currentUser)
         const user = await UserModel.findById(currentUser.id)
@@ -38,15 +34,11 @@ export const Post_CreateTask = async (req: Request, res: Response, next: NextFun
         let allUser= await UserModel.find()
         const users = allUser.filter(users => users.name !== user.name);
         res.render('createTask', { status: `task ${task.title}created` ,users})
-    } catch (err: any) {
-        console.log(req.body)
-        res.send(err)
-    }
-}
+})
 
-export const post_editTask = async (req:Request,res:Response)=>{
+export const post_editTask = catchAsync(async (req:Request,res:Response)=>{
     const status = req.body
     const taskId = req.params.id
     await TaskModel.findByIdAndUpdate(taskId,status) 
     res.redirect('/login')
-}
+})

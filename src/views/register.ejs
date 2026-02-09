@@ -66,9 +66,9 @@
                 <%= status %>
             </div>
             <% } %>
-                <% if (typeof err !=='undefined' ) { %>
-                    <div class="status">
-                        <%= err %>
+                <% if (typeof error !=='undefined' ) { %>
+                    <div class="status error">
+                        <%= error %>
                     </div>
                     <% } %>
                         <form action="/user/register" method="post">
