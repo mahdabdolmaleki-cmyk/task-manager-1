@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Tasks</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">Task Manager</a>
+            <ul class="nav-menu">
+                <li><a href="/login" class="nav-link">profile</a></li>
+                <li><a href="/task/create" class="nav-link">Create Task</a></li>
+                <li><a href="/logout" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <% if (typeof status !=='undefined' && status ) { %>
+        <div class="status error">
+            <%= status %>
+        </div>
+        <% } %>
+
+            <main class="search-container">
+                <h1 class="search-title">Search Tasks</h1>
+
+                <form class="search-form" method="post" action="/task/search">
+                    <input type="text" name="search" class="search-input" placeholder="Search by title or description">
+                    <button type="submit" class="search-button">Search</button>
+                </form>
+
+                <% if (typeof tasks !=='undefined' && tasks.length> 0) { %>
+                    <ul class="results-list">
+                        <% tasks.forEach(function(task){ %>
+                            <li class="result-item">
+                                <div class="result-head">
+                                    <h3 class="result-title">
+                                        <%= task.title %>
+                                    </h3>
+                                    <span class="result-status">
+                                        <%= task.status || 'open' %>
+                                    </span>
+                                </div>
+                                <% if (task.description) { %>
+                                    <p class="result-desc">
+                                        <%= task.description %>
+                                    </p>
+                                    <% } %>
+                                        <div class="result-meta">Assigned: <%= task.assignedTo || '—' %>
+                                        </div>
+                            </li>
+                            <% }) %>
+                    </ul>
+                    <% } else if (typeof q !=='undefined' ) { %>
+                        <p class="no-results">No results found for "<%= q %>"</p>
+                        <% } %>
+            </main>
+
+</body>
+
+</html>
