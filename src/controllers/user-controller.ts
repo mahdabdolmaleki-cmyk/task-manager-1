@@ -7,7 +7,6 @@ import { TaskModel } from '../model/task-model'
 import { catchAsync } from '../errors/catch-async'
 import logger from '../utils/logger'
 
-
 export const login = catchAsync(async (req: Request, res: Response) => {
     const data = req.body
     const find = await UserModel.findOne({ email: data.email })

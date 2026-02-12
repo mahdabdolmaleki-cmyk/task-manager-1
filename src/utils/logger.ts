@@ -1,6 +1,5 @@
 import winston from "winston";
 
-
 export default winston.createLogger({
     level: 'info',
     format: winston.format.combine(

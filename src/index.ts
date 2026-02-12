@@ -11,9 +11,6 @@ import { globalErrorHandler } from './middlewares/error-handler'
 import { simpleSyncOnStart } from './utils/sync-helper'
 import logger from './utils/logger'
 
-
-
-
 const cookieParser = require('cookie-parser')
 require('ejs')
 require('dotenv/config')
@@ -33,7 +30,6 @@ app.use(session({
     saveUninitialized: false,
     cookie: { secure: false, maxAge: 3600000 }
 }))
-
 
 app.use(passport.initialize())
 app.use(passport.session())

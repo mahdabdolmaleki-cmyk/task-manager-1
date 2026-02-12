@@ -128,7 +128,7 @@ taskSchema.post('findOneAndUpdate', async function(doc: ITask | null) {
 
 taskSchema.post('findOneAndDelete', async function(doc: ITask | null) {
     if (!doc) return;
-    logger.info(`🗑️ Post-findOneAndDelete middleware triggered for task: ${doc._id}`);
+    logger.info(`Post-findOneAndDelete middleware triggered for task: ${doc._id}`);
     try {
         await ElasticClient.delete({
             index: 'task',

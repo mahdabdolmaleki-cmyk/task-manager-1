@@ -92,7 +92,6 @@ export const get_search_task = catchAsync(async (req: Request, res: Response, ne
     res.render('search')
 })
 
-
 export const post_editTask = catchAsync(async (req: Request, res: Response) => {
     let currentUser = req.cookies.token
     currentUser = decodeToken(currentUser)

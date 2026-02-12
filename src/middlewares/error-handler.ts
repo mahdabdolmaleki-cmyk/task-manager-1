@@ -11,5 +11,4 @@ export const globalErrorHandler = (
     const message = err.message || "Internal Server Error"
     logger.error(`from errorhandel error: ${message}`)
     res.status(statusCode).render("error", { message })
-
 }
