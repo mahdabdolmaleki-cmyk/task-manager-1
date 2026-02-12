@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Task</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">Task Manager</a>
+            <ul class="nav-menu">
+                <li><a href="/login" class="nav-link">profile</a></li>
+                <li><a href="/task/create" class="nav-link active">Create Task</a></li>
+                <li><a href="/logout" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="form-container">
+        <h2>edit profile</h2>
+        <form action="/user/<%= user._id %>" method="post">
+            <label for="name">Name:</label>
+            <input type="text" name="name">
+
+            <label for="family">Family:</label>
+            <input type="text" name="family">
+
+            <label for="email">Email:</label>
+            <input type="email" name="email">
+
+            <label for="level">Level:</label>
+            <select name="level" required>
+                <option value="junior">Junior</option>
+                <option value="midlevel">Mid Level</option>
+                <option value="senior">Senior</option>
+            </select>
+
+            <input type="submit" value="edit">
+        </form>
+    </div>
+
+</body>
+
+</html>

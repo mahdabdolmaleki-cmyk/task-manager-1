@@ -3,5 +3,10 @@ export default interface UserDto{
     name:string,
     family:string,
     email:string,
-    password:string
+    password:string,
+    level:string,
+    githubId:string,
+    githubUsername:string,
+    profilePicture:string
+    authProvider:string
 }

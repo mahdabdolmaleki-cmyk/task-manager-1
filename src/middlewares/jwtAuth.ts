@@ -2,13 +2,15 @@ import express from "express";
 import { Request, Response, NextFunction } from "express";
 import { decodeToken } from "../utils/auth";
 import UserModel from "../model/user-model";
-import TaskModel from "../model/task-model";
+import {TaskModel} from "../model/task-model";
+import { catchAsync } from "../errors/catch-async";
+import logger from "../utils/logger";
 
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded())
 
-export const jwtAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+export const jwtAuthMiddleware = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     try {   
     let token = req.cookies.token
     if(!token){ return next()}
@@ -16,16 +18,16 @@ export const jwtAuthMiddleware = async (req: Request, res: Response, next: NextF
     const id : string = data.id
     const user = await UserModel.findById(id)
     if(!user){
-        console.log("cant find user")
+        logger.warn("cant find user")
         next()
     }
     const tasks = await TaskModel.find({forUser:id})
-    console.log(user)
     res.render('profile',{user,tasks})
     } catch (err:any) {
-        res.status(500).send({message:"server error"})        
+        logger.error('server error from jwtmiddleware')
+        res.status(500).render('error',{message:"server error"})        
     }
-}
+})
 
 
 

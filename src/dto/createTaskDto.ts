@@ -1,4 +1,4 @@
-import { IsDefined, IsEmail, IsEnum, IsString, IsStrongPassword, MaxLength, MinLength } from "class-validator";
+import { IsEnum, IsString, MaxLength, MinLength } from "class-validator";
 
 export enum TaskStatus {
   PENDING = 'pending',
