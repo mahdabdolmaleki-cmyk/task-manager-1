@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import TaskModel from '../model/task-model';
+import {TaskModel} from '../model/task-model';
 import { encodeToken } from '../utils/auth';
 import { catchAsync } from '../errors/catch-async';
 

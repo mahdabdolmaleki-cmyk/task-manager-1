@@ -1,6 +1,6 @@
 import express from 'express'
 import { register, deleteUser, login, updateUser, edit_user } from '../controllers/user-controller'
-import { githubCallback, githubFailure } from '../controllers/github-controller'
+import { githubCallback } from '../controllers/github-controller'
 
 import { registerValidator } from '../dto/registerDto'
 import passport from '../config/passport'

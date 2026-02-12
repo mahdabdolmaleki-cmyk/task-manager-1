@@ -33,7 +33,6 @@ passport.use(
                     email: profile.emails?.[0]?.value || `${profile.username}@github.com`,
                     githubId: profile.id,
                     githubUsername: profile.username,
-                    profilePicture: profile.photos?.[0]?.value,
                     authProvider: 'github',
                     level: 'junior'
                 });

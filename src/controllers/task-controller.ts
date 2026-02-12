@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import UserModel from '../model/user-model'
-import { decodeToken, encodeToken } from '../utils/auth'
-import TaskModel from '../model/task-model'
+import { decodeToken } from '../utils/auth'
 import { catchAsync } from '../errors/catch-async'
 import { ElasticClient } from '../config/elastic'
+import { TaskModel } from '../model/task-model'
 
 
 export const Get_CreateTask = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -32,17 +32,6 @@ export const Post_CreateTask = catchAsync(async (req: Request, res: Response, ne
     if (!user) return res.render('login')
     const data = req.body
     const task = await TaskModel.create({ ...data, userCreatore: currentUser.id })
-
-    await ElasticClient.index({
-        index: 'task',
-        id: task._id.toString(),
-        document: {
-            title: task.title,
-            description: task.description,
-            for: task.forUser,
-            creator: task.userCreatore
-        }
-    })
 
     let allUser = await UserModel.find()
     const users = allUser.filter(users => users.name !== user.name);
@@ -73,7 +62,7 @@ export const post_search_task = catchAsync(async (req: Request, res: Response, n
                 ],
                 filter: [{
                     term: {
-                        for: user!._id.toString()
+                        forUser: user!._id.toString()
                     }
                 }]
             }

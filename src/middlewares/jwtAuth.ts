@@ -2,7 +2,7 @@ import express from "express";
 import { Request, Response, NextFunction } from "express";
 import { decodeToken } from "../utils/auth";
 import UserModel from "../model/user-model";
-import TaskModel from "../model/task-model";
+import {TaskModel} from "../model/task-model";
 import { catchAsync } from "../errors/catch-async";
 
 const app = express()

@@ -1,6 +1,17 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+interface UserInterface extends Document{
+    name:string,
+    family:string,
+    email:string,
+    password:string,
+    level: 'senior' | 'midlevel' | 'junior',
+    githubId:string,
+    githubUsername:string,
+    authProvider:'local' | 'github'
+}
+
+const userSchema = new mongoose.Schema<UserInterface>({
     name: { type: String, required: true },
     family: { type: String },
     email: { type: String, required: true, unique: true },
@@ -8,10 +19,9 @@ const userSchema = new mongoose.Schema({
     level: { type: String, enum: ['senior', 'midlevel', 'junior'], default: 'junior' },
     githubId: { type: String, unique: true, sparse: true },
     githubUsername: { type: String },
-    profilePicture: { type: String },
     authProvider: { type: String, enum: ['local', 'github'], default: 'local' }
 })
 
-const UserModel = mongoose.model("User", userSchema)
+const UserModel = mongoose.model<UserInterface>("User", userSchema)
 
 export default UserModel

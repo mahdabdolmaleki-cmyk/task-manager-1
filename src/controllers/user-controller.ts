@@ -3,8 +3,7 @@ import UserModel from '../model/user-model'
 import UserDto from '../dto/userDto'
 import bcrypt from 'bcrypt'
 import { decodeToken, encodeToken } from '../utils/auth'
-import TaskModel from '../model/task-model'
-import { error } from 'node:console'
+import {TaskModel} from '../model/task-model'
 import { catchAsync } from '../errors/catch-async'
 
 

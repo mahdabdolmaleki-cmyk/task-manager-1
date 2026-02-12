@@ -1,4 +1,4 @@
-import express, { Router } from 'express'
+import express from 'express'
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import userRoutes from './routes/user-route'
@@ -8,6 +8,8 @@ import taskRouter from './routes/task-routes'
 import session from 'express-session'
 import passport from './config/passport'
 import { globalErrorHandler } from './middlewares/error-handler'
+import { simpleSyncOnStart } from './utils/sync-helper'
+
 
 
 
@@ -34,6 +36,7 @@ app.use(session({
 
 app.use(passport.initialize())
 app.use(passport.session())
+simpleSyncOnStart()
 
 app.get('/', (req: Request, res: Response) => { res.render('index') })
 app.get('/login', jwtAuthMiddleware, (req: Request, res: Response) => { res.render('login') })
@@ -53,7 +56,7 @@ app.use(globalErrorHandler)
 const port: any = process.env.PORT || 5500
 const aa: any = process.env.DB_URL
 mongoose.connect(aa)
-    .then(() => {
+    .then(async () => {
         app.listen(port, () => {
             console.log(`server running on port ${port}`)
         })
