@@ -1,5 +1,6 @@
 import { Schema, model, Document, Types } from 'mongoose';
 import { ElasticClient } from '../config/elastic';
+import logger from '../utils/logger';
 
 interface ITask extends Document {
     userCreatore: Types.ObjectId;
@@ -44,7 +45,7 @@ const taskSchema = new Schema<ITask>({
 });
 
 taskSchema.post('save', async function(doc: ITask) {
-    console.log(`Post-save middleware triggered for task: ${doc._id}`);
+    logger.info(`Post-save middleware triggered for task: ${doc._id}`);
     
     try {
         await ElasticClient.index({
@@ -60,9 +61,9 @@ taskSchema.post('save', async function(doc: ITask) {
                 _syncedFrom: 'mongoose_middleware'
             }
         });
-        console.log(`✅ Task ${doc._id} synced to Elasticsearch (SAVE)`);
+        logger.info(`Task ${doc._id} synced to Elasticsearch (SAVE)`);
     } catch (error: any) {
-        console.error(`Failed to sync task ${doc._id} to Elasticsearch:`, error.message);
+        logger.error(`Failed to sync task ${doc._id} to Elasticsearch:`, error.message);
     }
 });
 
@@ -70,7 +71,7 @@ taskSchema.post('findOneAndUpdate', async function(doc: ITask | null) {
     if (!doc) {
         return;
     }
-    console.log(`Post-findOneAndUpdate middleware triggered for task: ${doc._id}`);
+    logger.info(`Post-findOneAndUpdate middleware triggered for task: ${doc._id}`);
     
     try {
         try {
@@ -93,12 +94,12 @@ taskSchema.post('findOneAndUpdate', async function(doc: ITask | null) {
                 }
             });
             
-            console.log(`✅ Task ${doc._id} updated in Elasticsearch`);
+            logger.info(`Task ${doc._id} updated in Elasticsearch`);
             
         } catch (getError: any) {
             if (getError.meta?.statusCode === 404) {
 
-                console.log(`Task ${doc._id} not found in Elasticsearch, creating...`);
+                logger.warn(`Task ${doc._id} not found in Elasticsearch, creating...`);
                 
                 await ElasticClient.index({
                     index: 'task',
@@ -121,26 +122,26 @@ taskSchema.post('findOneAndUpdate', async function(doc: ITask | null) {
         }
         
     } catch (error: any) {
-        console.error(`Failed to update task ${doc._id} in Elasticsearch:`, error.message);
+        logger.error(`Failed to update task ${doc._id} in Elasticsearch:`, error.message);
     }
 });
 
 taskSchema.post('findOneAndDelete', async function(doc: ITask | null) {
     if (!doc) return;
-    console.log(`🗑️ Post-findOneAndDelete middleware triggered for task: ${doc._id}`);
+    logger.info(`🗑️ Post-findOneAndDelete middleware triggered for task: ${doc._id}`);
     try {
         await ElasticClient.delete({
             index: 'task',
             id: doc._id.toString()
         });
         
-        console.log(`Task ${doc._id} deleted from Elasticsearch`);
+        logger.info(`Task ${doc._id} deleted from Elasticsearch`);
         
     } catch (error: any) {
         if (error.meta?.statusCode !== 404) {
-            console.error(`Failed to delete task ${doc._id} from Elasticsearch:`, error.message);
+            logger.error(`Failed to delete task ${doc._id} from Elasticsearch:`, error.message);
         } else {
-            console.log(`ℹTask ${doc._id} was already deleted from Elasticsearch`);
+            logger.warn(`Task ${doc._id} was already deleted from Elasticsearch`);
         }
     }
 });

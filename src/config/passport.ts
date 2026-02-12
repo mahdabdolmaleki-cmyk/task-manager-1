@@ -1,6 +1,7 @@
 import passport from 'passport';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import UserModel from '../model/user-model';
+import logger from '../utils/logger';
 require('dotenv/config');
 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || '';
@@ -36,9 +37,10 @@ passport.use(
                     authProvider: 'github',
                     level: 'junior'
                 });
-
+                logger.info(`user ${user.name} signed up with github`)
                 return done(null, user);
             } catch (error: any) {
+                logger.error(`some thing went wrong from git hub registe error: ${error}`)
                 return done(error, null);
             }
         }
@@ -54,6 +56,7 @@ passport.deserializeUser(async (id: string, done: any) => {
         const user = await UserModel.findById(id);
         done(null, user);
     } catch (error: any) {
+        logger.error(`deserializeUser went wrong error: ${error}`)
         done(error, null);
     }
 });

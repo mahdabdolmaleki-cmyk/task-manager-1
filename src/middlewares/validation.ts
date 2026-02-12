@@ -2,6 +2,7 @@ import { validate } from "class-validator";
 import { plainToInstance } from "class-transformer";
 import { Request, Response, NextFunction } from "express";
 import { catchAsync } from "../errors/catch-async";
+import logger from "../utils/logger";
 
 export const validationMiddelware = (schema: any) => {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -11,6 +12,8 @@ export const validationMiddelware = (schema: any) => {
             if (error.length > 0) {
                 const errorMessages = error.flatMap(error =>
                     Object.values(error.constraints || {}))
+                logger.warn(`validation failed data: ${errorMessages}`)
+                
                 if (req.url == '/register')
                     res.render('register', { error: errorMessages })
             }

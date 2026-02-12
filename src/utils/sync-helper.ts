@@ -1,5 +1,6 @@
 import { ElasticClient } from "../config/elastic";
 import { TaskModel } from "../model/task-model";
+import logger from "./logger";
 
 export async function simpleSyncOnStart() {
 
@@ -10,12 +11,13 @@ export async function simpleSyncOnStart() {
                 query: { match_all: {} }
             }
         });
-        console.log('Old elastic data deleted');
+        logger.info('Old elastic data deleted');
     } catch (error) {
-        console.log('cant delete old elastic data');
+        logger.error('cant delete old elastic data');
     }
 
     console.log('Syncing all tasks to Elasticsearch...');
+    
     const tasks = await TaskModel.find({});
 
     for (const task of tasks) {
@@ -33,9 +35,9 @@ export async function simpleSyncOnStart() {
                 }
             });
         } catch (error) {
-            console.error(`Failed to add task ${task._id}:`, error);
+            logger.error(`Failed to add task ${task._id}:`, error);
         }
     }
 
-    console.log(`synced all task`);
+    logger.info(`synced all task`);
 }

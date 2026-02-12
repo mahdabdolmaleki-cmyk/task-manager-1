@@ -9,6 +9,7 @@ import session from 'express-session'
 import passport from './config/passport'
 import { globalErrorHandler } from './middlewares/error-handler'
 import { simpleSyncOnStart } from './utils/sync-helper'
+import logger from './utils/logger'
 
 
 
@@ -58,7 +59,8 @@ const aa: any = process.env.DB_URL
 mongoose.connect(aa)
     .then(async () => {
         app.listen(port, () => {
-            console.log(`server running on port ${port}`)
+            logger.info(`server running on port: ${port}`)
+            console.log(`server running on port: ${port}`)
         })
     })
-    .catch(err => console.log(err))
+    .catch(err => logger.error('cant connect to mongoDB'))

@@ -5,7 +5,6 @@ const secret: any = process.env.SECRET
 
 export const encodeToken = (payload:any) => {
     const token = jwt.sign(payload, secret, { expiresIn: "1h" })
-    console.log(token)
     return token
 }
 
