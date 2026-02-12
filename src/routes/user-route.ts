@@ -1,15 +1,31 @@
 import express from 'express'
-import {register, deleteUser, login, updateUser} from '../controllers/use-controller'
-import validationMiddelware from '../middlewares/validation'
-import   {registerValidator}  from '../dto/registerDto'
+import { register, deleteUser, login, updateUser, edit_user } from '../controllers/user-controller'
+import { githubCallback } from '../controllers/github-controller'
+
+import { registerValidator } from '../dto/registerDto'
+import passport from '../config/passport'
+import { validationMiddelware } from '../middlewares/validation'
 
 
 
 const userRouter = express.Router()
 
-userRouter.post('/register',validationMiddelware(registerValidator),register)
-userRouter.post('/login',login)
-userRouter.put('/:id',updateUser)
-userRouter.delete('/:id',deleteUser)
+userRouter.get('/edit-profile', edit_user)
+userRouter.post('/register', validationMiddelware(registerValidator), register)
+userRouter.post('/login', login)
+userRouter.post('/:id', updateUser)
+userRouter.delete('/:id', deleteUser)
+
+
+// GitHub OAuth routes
+
+userRouter.get('/auth/github',
+    passport.authenticate('github', { scope: ['user:email'] })
+)
+
+userRouter.get('/auth/github/callback',
+    passport.authenticate('github', { failureRedirect: '/login' }),
+    githubCallback
+)
 
 export default userRouter
