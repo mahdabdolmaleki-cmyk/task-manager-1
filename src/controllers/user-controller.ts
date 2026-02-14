@@ -1,14 +1,16 @@
 import { Request, Response } from 'express'
 import UserModel from '../model/user-model'
 import UserDto from '../dto/userDto'
-import bcrypt from 'bcrypt'
 import { decodeToken, encodeToken } from '../utils/auth'
-import { TaskModel } from '../model/task-model'
 import { catchAsync } from '../errors/catch-async'
 import logger from '../utils/logger'
+import { deeleteUser, editProfile, findUser, loginUser, registerUser } from '../services/user-service'
+import { findUserTask } from '../services/task-service'
+
+
 
 export const profile = catchAsync(async (req: Request, res: Response) => {
-    res.render('profile', { tasks:req.currentUser, user:req.usersTask })
+    res.render('profile', { tasks: req.usersTask, user: req.currentUser })
 })
 
 export const loginPage = catchAsync(async (req: Request, res: Response) => {
@@ -20,22 +22,14 @@ export const registerPage = catchAsync(async (req: Request, res: Response) => {
 })
 
 export const login = catchAsync(async (req: Request, res: Response) => {
-    const data = req.body
-    const find = await UserModel.findOne({ email: data.email })
-    if (!find) {
-        logger.warn(`invalid credential data: ${data}`)
-        return res.render('login', { error: "wrong email or password" })
-    }
-    const match = await bcrypt.compare(data.password, find.password as string)
-    if (!match) {
-        logger.warn(`invalid credential data: ${data}`)
-        return res.render('login', { error: "wrong email or password" })
-    }
-    const tasks = await TaskModel.find({ forUser: find._id })
-    const token = encodeToken({ id: find._id })
+    const { email, password } = req.body
+    const { user, status } = await loginUser(email, password)
+    if (!status) { return res.render('login', { error: 'invalid credential' }) }
+    const token = encodeToken({ id: user!._id })
     res.cookie('token', token, { httpOnly: true, maxAge: 3600000 })
-    logger.info(`user ${find.name} loged in`)
-    res.render('profile', { user: find, tasks })
+    const tasks = await findUserTask(user!._id)
+    logger.info(`user ${user!.name} loged in`)
+    res.render('profile', { user, tasks })
 })
 
 export const logout = catchAsync(async (req: Request, res: Response) => {
@@ -44,9 +38,8 @@ export const logout = catchAsync(async (req: Request, res: Response) => {
 })
 
 export const edit_user = catchAsync(async (req: Request, res: Response) => {
-    let currentUser = req.cookies.token
-    currentUser = decodeToken(currentUser)
-    const user = await UserModel.findById(currentUser.id)
+    let currentUser = req.currentUser
+    const user = await findUser(currentUser._id)
     if (!user) {
         logger.warn(`user dont loged in`)
         return res.render('login', { error: "please login" })
@@ -56,46 +49,26 @@ export const edit_user = catchAsync(async (req: Request, res: Response) => {
 
 export const register = catchAsync(async (req: Request, res: Response) => {
     const data: UserDto = req.body
-    const find = await UserModel.findOne({ email: data.email })
-    if (!find) {
-        const hashedPassword = await bcrypt.hash(data.password, 10)
-        await UserModel.create({ ...data, password: hashedPassword })
-        logger.info(`user ${data.name} signed up `)
-        res.render('login', { status: "user created" })
-    } else {
-        logger.warn(`user ${find.name} try to register`)
-        res.render('register', { err: "the email is already existed !!!!" })
-    }
+    const { user, status } = await registerUser(data)
+    if (!status) { res.render('register', { err: "the email is already existed !!!!" }) }
+    logger.info(`user ${data.name} signed up `)
+    res.render('login', { status: "user created" })
 })
 
 export const updateUser = catchAsync(async (req: Request, res: Response) => {
-    const id: string = req.params.id
-    let { name, family, email, level } = req.body
-    let data: any = {}
-    if (name !== '') data.name = name
-    if (family !== '') data.family = family
-    if (email !== '') data.email = email
-    if (level !== '') data.level = level
-    const user = await UserModel.findByIdAndUpdate(id, data, { new: true })
-    logger.info(`user ${name} change his/her details`)
-    res.render('editProfile', { user })
+    const id = req.params.id
+    const userId = req.currentUser._id
+    const { user, status } = await editProfile(id, req.body, userId)
+    if (!status) { return res.render('login') }
+    logger.info('user edit his/her profile')
+    const tasks = await findUserTask(req.currentUser._id)
+    res.render('profile', { user, tasks })
 })
 
 export const deleteUser = catchAsync(async (req: Request, res: Response) => {
-    const id: string = req.params.id
-    let currentUser = req.cookies.token
-    currentUser = decodeToken(currentUser)
-    currentUser = await UserModel.findById(currentUser.id)
-    if (!currentUser) {
-        logger.warn(`user try to delete other user`)
-        return res.render('login')
-    }
-    const user = await UserModel.findByIdAndDelete(currentUser._id)
-    if (!user) {
-        logger.warn(`user try to delete other user`)
-        return res.render('login')
-    }
-    logger.info(`user ${user!.name}`)
+    const id = req.params.id
+    const {user , status}=await deeleteUser(id,req.currentUser._id)
+    logger.info(`user ${user!.name} delete`)
     res.render('index', { status: "user deleted" })
-}) 
+})
 

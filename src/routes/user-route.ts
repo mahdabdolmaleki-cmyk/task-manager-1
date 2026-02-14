@@ -22,7 +22,7 @@ userRouter.get('/logout', logout)
 userRouter.get('/edit-profile', jwtAuthMiddleware, edit_user)
 
 
-userRouter.post('/register', jwtAuthMiddleware, validationMiddelware(registerValidator), register)
+userRouter.post('/register', validationMiddelware(registerValidator), register)
 
 userRouter.post('/login', validationMiddelware(loginValidator), login)
 

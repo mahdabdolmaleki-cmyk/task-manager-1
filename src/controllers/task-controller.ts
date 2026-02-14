@@ -1,17 +1,13 @@
 import { NextFunction, Request, Response } from 'express'
-import UserModel from '../model/user-model'
-import { decodeToken } from '../utils/auth'
 import { catchAsync } from '../errors/catch-async'
-import { ElasticClient } from '../config/elastic'
-import { TaskModel } from '../model/task-model'
 import logger from '../utils/logger'
+import { findAllUser } from '../services/user-service'
+import { createTask, editStatus, findUserTask } from '../services/task-service'
+import { searchTask } from '../services/elastic-service'
 
 
 export const Get_CreateTask = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    let currentUser = req.cookies.token
-    if (!req.cookies.token) return res.render('login')
-    currentUser = decodeToken(currentUser)
-    const user = await UserModel.findById(currentUser.id)
+    const user = req.currentUser
     if (!user) {
         logger.warn('user didnt login to see tasks')
         return res.render('login')
@@ -20,7 +16,7 @@ export const Get_CreateTask = catchAsync(async (req: Request, res: Response, nex
         logger.warn(`user ${user.name} with junior level try to create task!!!`)
         return res.render('createTask', { status: 'you dont have access to create task' })
     }
-    let allUser = await UserModel.find()
+    let allUser = await findAllUser()
     let users = allUser.filter(users => users.name !== user.name);
     if (user.level === 'midlevel') {
         users = users.filter(users => users.level === 'junior');
@@ -32,58 +28,27 @@ export const Get_CreateTask = catchAsync(async (req: Request, res: Response, nex
 })
 
 export const Post_CreateTask = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    let currentUser = req.cookies.token
-    currentUser = decodeToken(currentUser)
-    const user = await UserModel.findById(currentUser.id)
-    if (!user) {
+    const currentUser = req.currentUser
+    if (!currentUser) {
         logger.warn('some one with out loging try to create task')
         return res.render('login')
     }
     const data = req.body
-    const task = await TaskModel.create({ ...data, userCreatore: currentUser.id })
-
-    let allUser = await UserModel.find()
-    const users = allUser.filter(users => users.name !== user.name);
-    logger.info(`user ${user.name} create task with title: ${task.title}`)
+    const task = await createTask(data, currentUser._id.toString())
+    let allUser = await findAllUser()
+    const users = allUser.filter(users => users.name !== currentUser.name);
+    logger.info(`user ${currentUser.name} create task with title: ${task.title}`)
     res.render('createTask', { status: `task ${task.title}created`, users })
 })
 
 
 export const post_search_task = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
-    let currentUser = req.cookies.token
-    currentUser = decodeToken(currentUser)
-    const user = await UserModel.findById(currentUser.id)
+    let { _id } = req.currentUser
     const data = req.body.search
-
     if (!data) { return res.render('search', { status: 'write some thing to search' }) }
-
-    const result: any = await ElasticClient.search({
-        index: 'task',
-        query: {
-            bool: {
-                must: [{
-                    multi_match: {
-                        query: data,
-                        fields: ['title', 'description'],
-                        fuzziness: 'AUTO'
-                    }
-                }
-                ],
-                filter: [{
-                    term: {
-                        forUser: user!._id.toString()
-                    }
-                }]
-            }
-        }
-    })
-
-    const tasks = result.hits.hits.map((hit: any) => hit._source);
-
-    logger.info(`user ${user!.name} search: ${data}`)
-
-    res.render('search', { tasks })
+    const result: any = await searchTask(data, _id)
+    res.render('search', { tasks: result })
 
 
 })
@@ -93,15 +58,9 @@ export const get_search_task = catchAsync(async (req: Request, res: Response, ne
 })
 
 export const post_editTask = catchAsync(async (req: Request, res: Response) => {
-    let currentUser = req.cookies.token
-    currentUser = decodeToken(currentUser)
-    currentUser = await UserModel.findById(currentUser.id)
-    if (!currentUser) {
-        logger.warn('some one try to edit task with out login')
-        res.redirect('/login')
-    }
-    const status = req.body
-    const taskId = req.params.id
-    await TaskModel.findByIdAndUpdate(taskId, status)
-    res.render('profile',{user:req.currentUser,tasks:req.usersTask})
+    const currentUser = req.currentUser
+    const {status} = req.body
+    await editStatus(req.params.id,status,currentUser._id)
+    const tasks = await findUserTask(currentUser._id)
+    res.render('profile', { user: currentUser, tasks })
 })

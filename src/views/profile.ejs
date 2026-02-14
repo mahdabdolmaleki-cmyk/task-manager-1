@@ -117,7 +117,6 @@
                 <% } %>
     </div>
 
-    <!-- Edit Popup -->
     <div id="editPopup" class="popup-overlay">
         <div class="popup-content">
             <div class="popup-header">
@@ -130,7 +129,6 @@
                     <label class="form-label" id="taskTitleLabel"></label>
                     <select name="status" class="form-select" id="statusSelect">
                         <option value="pending">Pending</option>
-                        <option value="in-progress">In Progress</option>
                         <option value="progress">Progress</option>
                         <option value="completed">Completed</option>
                     </select>
@@ -145,21 +143,14 @@
     </div>
 
     <script>
-        // Popup Management
         function openEditPopup(taskId, taskTitle, currentStatus) {
             const form = document.getElementById('editForm');
             const taskTitleLabel = document.getElementById('taskTitleLabel');
             const statusSelect = document.getElementById('statusSelect');
             const popup = document.getElementById('editPopup');
-
-            // Set form action
             form.action = `/task/${taskId}`;
-
-            // Update form content
             taskTitleLabel.textContent = taskTitle;
             statusSelect.value = currentStatus;
-
-            // Show popup
             popup.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -169,37 +160,24 @@
             popup.classList.remove('active');
             document.body.style.overflow = 'auto';
         }
-
-        // Close popup when clicking outside
         document.getElementById('editPopup').addEventListener('click', function (e) {
             if (e.target === this) {
                 closeEditPopup();
             }
         });
 
-        // Close popup with ESC key
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') {
-                closeEditPopup();
-            }
-        });
-
-        // Form submission feedback
         document.getElementById('editForm').addEventListener('submit', function (e) {
-            // Optional: Add loading state
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Saving...';
             submitBtn.disabled = true;
 
-            // Revert after 3 seconds (in case of error)
             setTimeout(() => {
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
             }, 3000);
         });
 
-        // Status color coding
         document.addEventListener('DOMContentLoaded', function () {
             const statusElements = document.querySelectorAll('.badge-status');
             statusElements.forEach(el => {
