@@ -9,5 +9,5 @@ export class registerValidator {
     @IsDefined()
     @IsStrongPassword()
     password : string;
-    age?: number;
+    level: string;
 }

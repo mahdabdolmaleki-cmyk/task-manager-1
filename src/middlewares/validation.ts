@@ -13,9 +13,6 @@ export const validationMiddelware = (schema: any) => {
                 const errorMessages = error.flatMap(error =>
                     Object.values(error.constraints || {}))
                 logger.warn(`validation failed data: ${errorMessages}`)
-                
-                if (req.url == '/register')
-                    res.render('register', { error: errorMessages })
             }
             next()
         })

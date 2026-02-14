@@ -3,11 +3,10 @@ import { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import userRoutes from './routes/user-route'
 import path from 'path'
-import { jwtAuthMiddleware } from './middlewares/jwtAuth'
+import { jwtAuthMiddleware, globalErrorHandler } from './middlewares/index'
 import taskRouter from './routes/task-routes'
 import session from 'express-session'
 import passport from './config/passport'
-import { globalErrorHandler } from './middlewares/error-handler'
 import { simpleSyncOnStart } from './utils/sync-helper'
 import logger from './utils/logger'
 
@@ -36,17 +35,10 @@ app.use(passport.session())
 simpleSyncOnStart()
 
 app.get('/', (req: Request, res: Response) => { res.render('index') })
-app.get('/login', jwtAuthMiddleware, (req: Request, res: Response) => { res.render('login') })
-app.get('/register', (req: Request, res: Response) => { res.render('register') })
 
-app.use('/', userRoutes)
 app.use('/user', userRoutes)
 app.use('/task', taskRouter)
 
-app.get('/logout', (req, res) => {
-    res.clearCookie('token')
-    res.redirect('/')
-})
 
 app.use(globalErrorHandler)
 

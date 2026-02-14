@@ -7,6 +7,18 @@ import { TaskModel } from '../model/task-model'
 import { catchAsync } from '../errors/catch-async'
 import logger from '../utils/logger'
 
+export const profile = catchAsync(async (req: Request, res: Response) => {
+    res.render('profile', { tasks:req.currentUser, user:req.usersTask })
+})
+
+export const loginPage = catchAsync(async (req: Request, res: Response) => {
+    res.render('login')
+})
+
+export const registerPage = catchAsync(async (req: Request, res: Response) => {
+    res.render('register')
+})
+
 export const login = catchAsync(async (req: Request, res: Response) => {
     const data = req.body
     const find = await UserModel.findOne({ email: data.email })
@@ -24,6 +36,11 @@ export const login = catchAsync(async (req: Request, res: Response) => {
     res.cookie('token', token, { httpOnly: true, maxAge: 3600000 })
     logger.info(`user ${find.name} loged in`)
     res.render('profile', { user: find, tasks })
+})
+
+export const logout = catchAsync(async (req: Request, res: Response) => {
+    res.clearCookie('token')
+    res.render('index')
 })
 
 export const edit_user = catchAsync(async (req: Request, res: Response) => {
@@ -81,3 +98,4 @@ export const deleteUser = catchAsync(async (req: Request, res: Response) => {
     logger.info(`user ${user!.name}`)
     res.render('index', { status: "user deleted" })
 }) 
+

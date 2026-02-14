@@ -103,5 +103,5 @@ export const post_editTask = catchAsync(async (req: Request, res: Response) => {
     const status = req.body
     const taskId = req.params.id
     await TaskModel.findByIdAndUpdate(taskId, status)
-    res.redirect('/login')
+    res.render('profile',{user:req.currentUser,tasks:req.usersTask})
 })
