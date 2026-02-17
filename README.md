@@ -31,7 +31,6 @@ This project is a **Task Manager REST API** built with **Node.js, Express, TypeS
 
 ```
 src/
-│── index.ts
 |
 ├── config/
 │   ├── elastic.ts
@@ -40,7 +39,7 @@ src/
 ├── controllers/
 │   ├─ github-controller.ts
 │   ├─ task-controller.ts
-│   └── user-controller.ts
+│   └─ user-controller.ts
 |
 ├── dto/
 │   ├── createTaskDto.ts
@@ -82,12 +81,18 @@ src/
 │   ├── register.ejs
 │   └── search.ejs
 │
+├── services/
+│   ├── elastic-service.ts
+│   ├── task-service.ts
+│   └── user-service.ts
+|
 ├── utils/
 │   ├── auth.ts
 │   └── swagger.ts
 │
-├── package.json
+├── index.ts
 ├── tsconfig.json
+└── package.json
 ```
 
 ---
@@ -183,13 +188,14 @@ npm run start
 ## Project structure (notable files)
 
 - `src/index.ts` — app entry, Express setup, session, passport, Mongoose connect
-- `src/config/passport.ts` — GitHub OAuth strategy
-- `src/config/elastic.ts` — Elasticsearch client
+- `src/config` — GitHub OAuth strategy & Elasticsearch client
 - `src/model` — `user-model.ts`, `task-model.ts` (includes ES sync hooks)
-- `src/controllers` — logics
+- `src/controllers` — response
+- `src/services` — business logics
 - `src/routes` — route handlers
 - `src/middlewares` — error handler, JWT/session middleware and validations
 - `src/views` — EJS templates
+- `src/utils` — encode/decode token , log config , sync elastic with mongo
 
 ---
 
