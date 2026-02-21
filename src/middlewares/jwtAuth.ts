@@ -17,10 +17,6 @@ declare global {
     }
 }
 
-const app = express()
-app.use(express.json())
-app.use(express.urlencoded())
-
 export const jwtAuthMiddleware = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         let token = req.cookies.token
         if (!token) { return res.render('login') }
